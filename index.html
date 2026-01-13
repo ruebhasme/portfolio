@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rutika (Rue) Bhasme | Portfolio</title>
+    <style>
+        /* --- RESET & VARIABLES --- */
+        :root {
+            /* Sage Green Palette */
+            --bg-color: #6B7F68; /* Sage Green */
+            --text-color: #FFFFFF;
+            --line-color: rgba(255, 255, 255, 0.4);
+            --hover-color: #E0E8DF;
+            
+            --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --spacing-container: 4vw;
+            --spacing-section: 120px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            line-height: 1.4;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+            transition: opacity 0.3s ease, transform 0.2s ease;
+        }
+
+        a:hover {
+            opacity: 0.7;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1 {
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        h2 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            font-size: 1.25rem;
+            line-height: 1.6;
+            font-weight: 400;
+            max-width: 700px;
+        }
+
+        .label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* --- LAYOUT UTILITIES --- */
+        .container {
+            padding: 0 var(--spacing-container);
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .grid-split {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--line-color);
+        }
+
+        /* --- ANIMATIONS --- */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- HEADER --- */
+        header {
+            padding: 2rem var(--spacing-container);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            /* Using backdrop filter for readability while keeping transparent feel */
+            backdrop-filter: blur(5px); 
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 3rem;
+        }
+
+        /* UPDATED NAV STYLE: Big, Bold, White */
+        nav a {
+            font-size: 1.2rem;
+            font-weight: 800; /* Extra Bold */
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            color: #FFFFFF;
+        }
+        
+        nav a:hover {
+            text-decoration: underline;
+            text-decoration-thickness: 2px;
+            opacity: 1;
+        }
+
+        /* --- HERO SECTION --- */
+        #hero {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            padding-top: 100px;
+        }
+
+        .hero-text {
+            max-width: 90%;
+        }
+
+        /* --- ABOUT SECTION --- */
+        #about {
+            padding: var(--spacing-section) var(--spacing-container);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 1rem;
+        }
+
+        /* --- EXPERIENCE SECTION --- */
+        #experience {
+            padding: var(--spacing-section) var(--spacing-container);
+        }
+
+        .exp-item {
+            display: grid;
+            grid-template-columns: 0.5fr 3fr;
+            align-items: baseline;
+            padding: 3rem 0;
+            border-top: 1px solid var(--line-color);
+            transition: background-color 0.3s ease;
+        }
+
+        .exp-item:hover {
+            background-color: rgba(255,255,255, 0.1);
+        }
+
+        .exp-number {
+            font-size: 1rem;
+            font-family: monospace;
+        }
+
+        .exp-content h2 {
+            margin-bottom: 0.5rem;
+        }
+
+        .exp-role {
+            font-size: 1.5rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        .exp-details {
+            font-size: 1rem;
+            opacity: 0.7;
+            margin-bottom: 1rem;
+        }
+
+        /* --- EDUCATION SECTION --- */
+        #education {
+            padding: var(--spacing-section) var(--spacing-container);
+        }
+
+        .edu-item {
+            margin-bottom: 2rem;
+        }
+
+        /* --- FOOTER / CONTACT --- */
+        #contact {
+            padding: var(--spacing-section) var(--spacing-container) 4rem;
+            border-top: 1px solid var(--line-color);
+        }
+
+        /* UPDATED CONTACT LINK STYLE */
+        .contact-link {
+            display: inline-block;
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 4rem;
+            line-height: 1;
+            border-bottom: 2px solid transparent;
+        }
+
+        .contact-link:hover {
+            opacity: 1;
+            border-bottom: 4px solid white;
+            transform: translateY(-5px);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            font-size: 0.9rem;
+        }
+
+        .footer-col h4 {
+            margin-bottom: 1rem;
+            opacity: 0.6;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            header {
+                padding: 1.5rem var(--spacing-container);
+            }
+            
+            nav ul {
+                gap: 1.5rem;
+            }
+
+            nav a {
+                font-size: 1rem;
+            }
+
+            .grid-split {
+                grid-template-columns: 1fr;
+            }
+            
+            .exp-item {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="fade-in-up">
+        <div class="logo">Rue.</div>
+        <nav>
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#experience">Work</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="hero" class="container">
+        <div class="hero-text fade-in-up">
+            <h1>
+                Advanced Computing Student based in Sydney. <br>
+                Cybersecurity & Software Development Major.
+            </h1>
+        </div>
+    </section>
+
+    <section id="about" class="container">
+        <div class="grid-split fade-in-up">
+            <div class="label">Intro</div>
+            <div>
+                <p style="margin-bottom: 1.5rem;">
+                    As a second-year student at the University of Sydney, I’m diving deep into the world of Advanced Computing. I’m passionate about crafting tailored digital solutions that seamlessly blend innovation with practicality.
+                </p>
+                <p>
+                    Currently, I’m sharpening my skills as a Cybersecurity Intern at INK IT Solutions in Melbourne, where I’m dedicated to safeguarding the digital frontier. A natural people person, I thrive on building connections and am always open to collaborating on projects that push the boundaries of what’s possible in tech.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="experience" class="container">
+        
+        <div class="exp-item fade-in-up">
+            <div class="exp-number">01</div>
+            <div class="exp-content">
+                <h2>INK IT Solutions</h2>
+                <div class="exp-role">Cybersecurity Intern</div>
+                <div class="exp-details">Melbourne, Australia (Remote)</div>
+                <p>Dedicated to safeguarding the digital frontier and crafting tailored digital solutions.</p>
+            </div>
+        </div>
+
+        <div class="exp-item fade-in-up">
+            <div class="exp-number">02</div>
+            <div class="exp-content">
+                <h2>Pennant Technologies</h2>
+                <div class="exp-role">Software Intern</div>
+                <div class="exp-details">Aug 2025 - Present · Remote</div>
+                <p>Developing software solutions and gaining hands-on industry experience in a dynamic environment.</p>
+            </div>
+        </div>
+
+        <div class="exp-item fade-in-up">
+            <div class="exp-number">03</div>
+            <div class="exp-content">
+                <h2>Engineering Int. Students Assoc.</h2>
+                <div class="exp-role">Professional & Academic Director</div>
+                <div class="exp-details">Oct 2025 - Present · Sydney, On-site</div>
+                <p>Leading academic initiatives and professional development opportunities for international engineering students.</p>
+            </div>
+        </div>
+
+        <div class="exp-item fade-in-up">
+            <div class="exp-number">04</div>
+            <div class="exp-content">
+                <h2>Bush To Bridge Tutoring</h2>
+                <div class="exp-role">Academic Tutor</div>
+                <div class="exp-details">Oct 2023 - Present · Remote</div>
+                <p>Simplifying complex ideas and sparking a passion for technology in future innovators.</p>
+            </div>
+        </div>
+
+    </section>
+
+    <section id="education" class="container">
+        <div class="grid-split fade-in-up">
+            <div class="label">Education</div>
+            <div>
+                <div class="edu-item">
+                    <h3>University of Sydney</h3>
+                    <p>Bachelor of Advanced Computing (2023 - 2027)<br>
+                    <span style="font-size: 0.9rem; opacity: 0.8;">Majors: Cybersecurity & Software Development</span></p>
+                </div>
+                <div class="edu-item">
+                    <h3>The Women's College</h3>
+                    <p>Resident & Student Ambassador (2023 - 2024)</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact" class="container">
+        <div class="section-header fade-in-up">
+            <div class="label">Contact</div>
+            <div style="max-width: 400px; text-align: right; font-size: 0.9rem;">
+                Looking for collaboration? Let's talk.
+            </div>
+        </div>
+
+        <div class="fade-in-up">
+            <a href="mailto:bhasmerutika@gmail.com?subject=Inquiry%20from%20Portfolio&body=Hi%20Rue,%0A%0AI'd%20like%20to%20get%20in%20touch%20regarding..." 
+               class="contact-link" 
+               title="Send an email">
+                Get in Touch.
+            </a>
+        </div>
+
+        <div class="footer-grid fade-in-up">
+            <div class="footer-col">
+                <h4>Rutika (Rue) Bhasme</h4>
+                <p>Advanced Computing Student</p>
+            </div>
+            <div class="footer-col">
+                <h4>Location</h4>
+                <p>Sydney, New South Wales</p>
+                <p>Australia</p>
+            </div>
+            <div class="footer-col">
+                <h4>Connect</h4>
+                <p><a href="mailto:bhasmerutika@gmail.com?subject=Inquiry%20from%20Portfolio">Email Me</a></p>
+                <p><a href="#">LinkedIn</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            
+            // Intersection Observer for Fade In Animations
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target); // Only animate once
+                    }
+                });
+            }, observerOptions);
+
+            const elementsToAnimate = document.querySelectorAll('.fade-in-up');
+            elementsToAnimate.forEach(el => observer.observe(el));
+
+            // Smooth Scrolling for Anchors
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
