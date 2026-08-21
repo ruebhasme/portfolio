@@ -7,6 +7,7 @@ import {
   type MotionValue
 } from 'framer-motion';
 import { useEffect, useRef, type MouseEvent } from 'react';
+import ParticleHeadline from './components/ParticleHeadline';
 
 const PRIMARY_TEXT = '#E1E0CC';
 const HERO_VIDEO_URL =
@@ -83,50 +84,6 @@ function handleNavEnter(event: MouseEvent<HTMLAnchorElement>) {
 
 function handleNavLeave(event: MouseEvent<HTMLAnchorElement>) {
   event.currentTarget.style.color = 'rgba(225, 224, 204, 0.8)';
-}
-
-function WordsPullUp({
-  text,
-  className = '',
-  showAsterisk = false
-}: {
-  text: string;
-  className?: string;
-  showAsterisk?: boolean;
-}) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true, margin: '-80px' });
-  const words = text.split(' ');
-
-  return (
-    <span ref={ref} className={`inline-flex flex-wrap ${className}`}>
-      {words.map((word, index) => {
-        const isFinalWord = index === words.length - 1;
-
-        return (
-          <motion.span
-            aria-hidden="true"
-            className="relative mr-[0.12em] inline-block"
-            initial={{ y: 20, opacity: 0 }}
-            animate={isInView ? { y: 0, opacity: 1 } : { y: 20, opacity: 0 }}
-            transition={{
-              delay: index * 0.08,
-              duration: 0.85,
-              ease: [0.16, 1, 0.3, 1]
-            }}
-            key={`${word}-${index}`}
-          >
-            {word}
-            {showAsterisk && isFinalWord ? (
-              <span className="absolute -right-[0.3em] top-[0.65em] text-[0.31em] leading-none">
-                *
-              </span>
-            ) : null}
-          </motion.span>
-        );
-      })}
-    </span>
-  );
 }
 
 function WordsPullUpMultiStyle({
@@ -246,13 +203,11 @@ function Hero() {
         </div>
         <div className="absolute inset-x-0 bottom-0 z-10 px-5 pb-6 sm:px-6 sm:pb-8 md:px-8 md:pb-8 lg:px-10">
           <div className="grid items-end gap-5 md:grid-cols-12 md:gap-6">
-            <h1
-              className="hero-heading-shadow col-span-full max-w-[12ch] text-[4.4rem] font-medium leading-[0.9] sm:text-[6rem] md:col-span-8 md:text-[8rem] lg:text-[10rem] xl:text-[11rem] 2xl:text-[12rem]"
-              style={{ color: PRIMARY_TEXT }}
-              aria-label="Rutika Bhasme"
-            >
-              <WordsPullUp text="Rutika Bhasme" showAsterisk />
-            </h1>
+            <ParticleHeadline
+              text="Rutika Bhasme"
+              showAsterisk
+              className="col-span-full max-w-[12ch] text-[4.4rem] font-bold leading-[0.9] text-primary sm:text-[6rem] md:col-span-8 md:text-[8rem] lg:text-[10rem] xl:text-[11rem] 2xl:text-[12rem]"
+            />
             <div className="max-w-xl md:col-span-4 md:pb-3 lg:pb-6">
               <motion.p
                 className="text-sm leading-[1.25] text-primary/85 sm:text-base md:text-lg"
