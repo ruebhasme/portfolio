@@ -9,9 +9,7 @@ import {
 import { useEffect, useRef, type MouseEvent } from 'react';
 import ParticleHeadline from './components/ParticleHeadline';
 
-const PRIMARY_TEXT = '#E1E0CC';
-const HERO_VIDEO_URL =
-  'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260506_031045_0e1165dd-ab48-46e3-ad3d-5fe77f217647.mp4';
+const PRIMARY_TEXT = '#FED7AA';
 
 const navItems = [
   { label: 'About', href: '#about' },
@@ -83,7 +81,7 @@ function handleNavEnter(event: MouseEvent<HTMLAnchorElement>) {
 }
 
 function handleNavLeave(event: MouseEvent<HTMLAnchorElement>) {
-  event.currentTarget.style.color = 'rgba(225, 224, 204, 0.8)';
+  event.currentTarget.style.color = 'rgba(254, 215, 170, 0.8)';
 }
 
 function WordsPullUpMultiStyle({
@@ -165,23 +163,13 @@ function SectionLabel({ children }: { children: string }) {
 function Hero() {
   return (
     <section
-      className="h-screen bg-black p-4 md:p-6"
+      className="h-screen bg-ink p-4 md:p-6"
       aria-label="Rutika Bhasme hero"
     >
-      <div className="relative h-full overflow-hidden rounded-2xl bg-black md:rounded-[2rem]">
-        <video
-          className="absolute inset-0 h-full w-full object-cover"
-          src={HERO_VIDEO_URL}
-          autoPlay
-          loop
-          muted
-          playsInline
-        />
-        <div className="noise-overlay pointer-events-none absolute inset-0 opacity-[0.7] mix-blend-overlay" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/15 to-black/85" />
+      <div className="relative h-full overflow-hidden rounded-2xl bg-ink md:rounded-[2rem]">
         <div className="absolute inset-x-0 top-0 z-20 flex justify-center px-2">
           <nav
-            className="w-[calc(100%-0.5rem)] max-w-fit overflow-hidden rounded-b-2xl bg-black px-4 py-2 sm:w-auto md:rounded-b-3xl md:px-8"
+            className="w-[calc(100%-0.5rem)] max-w-fit overflow-hidden rounded-b-2xl bg-ink px-4 py-2 sm:w-auto md:rounded-b-3xl md:px-8"
             aria-label="Primary navigation"
           >
             <ul className="flex items-center justify-center gap-5 text-[10px] sm:gap-8 sm:text-xs md:gap-12 md:text-sm">
@@ -190,7 +178,7 @@ function Hero() {
                   <a
                     href={item.href}
                     className="whitespace-nowrap transition-colors duration-300"
-                    style={{ color: 'rgba(225, 224, 204, 0.8)' }}
+                    style={{ color: 'rgba(254, 215, 170, 0.8)' }}
                     onMouseEnter={handleNavEnter}
                     onMouseLeave={handleNavLeave}
                   >
@@ -201,14 +189,17 @@ function Hero() {
             </ul>
           </nav>
         </div>
+        <div className="absolute inset-x-0 top-0 z-10 px-5 pt-14 sm:px-6 sm:pt-16 md:px-8 md:pt-20 lg:px-10">
+          {/* Sized in vw with nowrap so "rutika bhasme" always holds one line. */}
+          <ParticleHeadline
+            text="rutika bhasme"
+            showAsterisk
+            className="whitespace-nowrap text-center text-[10.5vw] font-bold leading-[0.9] text-primary"
+          />
+        </div>
         <div className="absolute inset-x-0 bottom-0 z-10 px-5 pb-6 sm:px-6 sm:pb-8 md:px-8 md:pb-8 lg:px-10">
           <div className="grid items-end gap-5 md:grid-cols-12 md:gap-6">
-            <ParticleHeadline
-              text="Rutika Bhasme"
-              showAsterisk
-              className="col-span-full max-w-[12ch] text-[4.4rem] font-bold leading-[0.9] text-primary sm:text-[6rem] md:col-span-8 md:text-[8rem] lg:text-[10rem] xl:text-[11rem] 2xl:text-[12rem]"
-            />
-            <div className="max-w-xl md:col-span-4 md:pb-3 lg:pb-6">
+            <div className="max-w-xl md:col-span-4 md:col-start-9 md:pb-3 lg:pb-6">
               <motion.p
                 className="text-sm leading-[1.25] text-primary/85 sm:text-base md:text-lg"
                 initial={{ y: 20, opacity: 0 }}
@@ -224,7 +215,7 @@ function Hero() {
               </motion.p>
               <motion.a
                 href="mailto:bhasmerutika@gmail.com?subject=Inquiry%20from%20Portfolio&body=Hi%20Rue,%0A%0AI'd%20like%20to%20get%20in%20touch%20regarding..."
-                className="group mt-5 inline-flex items-center gap-2 rounded-full bg-primary py-1.5 pl-5 pr-1.5 text-sm font-medium text-black transition-[gap] duration-300 hover:gap-3 sm:text-base"
+                className="group mt-5 inline-flex items-center gap-2 rounded-full bg-primary py-1.5 pl-5 pr-1.5 text-sm font-medium text-ink transition-[gap] duration-300 hover:gap-3 sm:text-base"
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{
@@ -234,7 +225,7 @@ function Hero() {
                 }}
               >
                 <span>Get in Touch</span>
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-black transition-transform duration-300 group-hover:scale-110 sm:h-10 sm:w-10">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink transition-transform duration-300 group-hover:scale-110 sm:h-10 sm:w-10">
                   <ArrowRight className="h-4 w-4 text-primary sm:h-5 sm:w-5" />
                 </span>
               </motion.a>
@@ -257,9 +248,9 @@ function About() {
   return (
     <section
       id="about"
-      className="bg-black px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-28"
+      className="bg-ink px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-28"
     >
-      <div className="mx-auto max-w-6xl rounded-[1.5rem] bg-[#101010] px-5 py-14 text-center sm:px-8 sm:py-20 md:py-24 lg:px-12">
+      <div className="mx-auto max-w-6xl rounded-[1.5rem] bg-surface px-5 py-14 text-center sm:px-8 sm:py-20 md:py-24 lg:px-12">
         <SectionLabel>Intro</SectionLabel>
         <h2
           className="mx-auto mt-8 max-w-4xl text-3xl font-normal leading-[0.95] sm:text-4xl sm:leading-[0.9] md:text-5xl lg:text-6xl"
@@ -277,7 +268,7 @@ function About() {
         </h2>
         <div
           ref={textRef}
-          className="mx-auto mt-10 max-w-3xl whitespace-pre-wrap text-sm leading-relaxed text-[#DEDBC8] sm:mt-12 md:text-base"
+          className="mx-auto mt-10 max-w-3xl whitespace-pre-wrap text-sm leading-relaxed text-primary sm:mt-12 md:text-base"
         >
           {revealText.split('').map((letter, index) => (
             <AnimatedLetter
@@ -301,7 +292,7 @@ function Experience() {
   return (
     <section
       id="experience"
-      className="relative overflow-hidden bg-black px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-28"
+      className="relative overflow-hidden bg-ink px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-28"
     >
       <div className="bg-noise pointer-events-none absolute inset-0 opacity-[0.13]" />
       <div className="relative mx-auto max-w-7xl">
@@ -318,7 +309,7 @@ function Experience() {
           <div ref={ref} className="grid gap-3">
             {experienceItems.map((item, index) => (
               <motion.article
-                className="grid gap-5 rounded-[0.5rem] bg-[#212121] p-5 sm:p-6 md:grid-cols-[0.18fr_1fr]"
+                className="grid gap-5 rounded-[0.5rem] bg-surface2 p-5 sm:p-6 md:grid-cols-[0.18fr_1fr]"
                 initial={{ scale: 0.98, opacity: 0, y: 16 }}
                 animate={
                   isInView
@@ -332,7 +323,7 @@ function Experience() {
                 }}
                 key={item.title}
               >
-                <div className="text-xs text-gray-500">{item.number}</div>
+                <div className="text-xs text-primary/55">{item.number}</div>
                 <div>
                   <h3 className="text-2xl font-normal text-primary sm:text-3xl">
                     {item.title}
@@ -340,8 +331,8 @@ function Experience() {
                   <p className="mt-2 text-lg font-light text-primary/80">
                     {item.role}
                   </p>
-                  <p className="mt-2 text-sm text-gray-500">{item.details}</p>
-                  <p className="mt-5 max-w-2xl text-sm leading-relaxed text-gray-400 sm:text-base">
+                  <p className="mt-2 text-sm text-primary/55">{item.details}</p>
+                  <p className="mt-5 max-w-2xl text-sm leading-relaxed text-primary/70 sm:text-base">
                     {item.description}
                   </p>
                 </div>
@@ -358,7 +349,7 @@ function Education() {
   return (
     <section
       id="education"
-      className="bg-black px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-28"
+      className="bg-ink px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-28"
     >
       <div className="mx-auto grid max-w-7xl gap-8 md:grid-cols-[0.35fr_1fr] md:gap-12">
         <div>
@@ -373,11 +364,11 @@ function Education() {
         <div className="grid gap-3 md:grid-cols-2">
           {educationItems.map((item) => (
             <article
-              className="rounded-[0.5rem] bg-[#101010] p-6"
+              className="rounded-[0.5rem] bg-surface p-6"
               key={item.title}
             >
               <h3 className="text-2xl font-normal text-primary">{item.title}</h3>
-              <p className="mt-5 text-base leading-relaxed text-gray-400">
+              <p className="mt-5 text-base leading-relaxed text-primary/70">
                 {item.description}
               </p>
               {item.detail ? (
@@ -395,24 +386,24 @@ function Contact() {
   return (
     <footer
       id="contact"
-      className="border-t border-primary/15 bg-black px-4 py-16 sm:px-6 sm:py-20 lg:px-8"
+      className="border-t border-primary/15 bg-ink px-4 py-16 sm:px-6 sm:py-20 lg:px-8"
     >
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <SectionLabel>Contact</SectionLabel>
-          <p className="max-w-sm text-sm text-gray-400 sm:text-right">
+          <p className="max-w-sm text-sm text-primary/70 sm:text-right">
             Looking for collaboration? Let&apos;s talk.
           </p>
         </div>
         <a
           href="mailto:bhasmerutika@gmail.com?subject=Inquiry%20from%20Portfolio&body=Hi%20Rue,%0A%0AI'd%20like%20to%20get%20in%20touch%20regarding..."
-          className="mt-10 inline-flex items-center gap-3 text-5xl font-normal leading-none text-primary transition-colors duration-300 hover:text-white sm:text-7xl"
+          className="mt-10 inline-flex items-center gap-3 text-5xl font-normal leading-none text-primary transition-colors duration-300 hover:text-ember sm:text-7xl"
           title="Send an email"
         >
           <span>Get in Touch.</span>
           <ArrowRight className="h-9 w-9 -rotate-45 sm:h-12 sm:w-12" />
         </a>
-        <div className="mt-14 grid gap-8 text-sm text-gray-400 md:grid-cols-3">
+        <div className="mt-14 grid gap-8 text-sm text-primary/70 md:grid-cols-3">
           <div>
             <h4 className="mb-3 text-primary">Rutika (Rue) Bhasme</h4>
             <p>Advanced Computing Student</p>
@@ -465,7 +456,7 @@ export default function App() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-black">
+    <main className="min-h-screen bg-ink">
       <Hero />
       <About />
       <Experience />

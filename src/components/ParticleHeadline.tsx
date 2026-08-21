@@ -21,12 +21,11 @@ export type ParticlePalette = {
   hot: string;
 };
 
-// White-beige: her cream as the body, a paler warm white for lift, pure white
-// for the occasional spark.
+// Rose Ember: crimson body, peach lift, warm white for the occasional spark.
 const DEFAULT_PALETTE: ParticlePalette = {
-  base: '#F0E6CE',
-  accent: '#FFF8E8',
-  hot: '#FFFFFF'
+  base: '#BE123C',
+  accent: '#FED7AA',
+  hot: '#FFF3E6'
 };
 
 type Props = {
@@ -314,7 +313,9 @@ export default function ParticleHeadline({
     const rctx = raster.getContext('2d', { willReadFrequently: true })!;
 
     // Pointer maths needs the canvas box. Measuring it per pointermove forces a
-    // layout flush up to 120x a second, so cache it and refresh on scroll/resize.
+    // layout flush up to 120x a second, so it is cached and refreshed once per
+    // frame instead — bounded, and it can never fall out of step with a canvas
+    // that moves (this one is sized in vw, so it moves on any viewport change).
     let rect = { left: 0, top: 0, width: 0, height: 0 };
     function refreshRect() {
       const r = canvas!.getBoundingClientRect();
@@ -343,9 +344,11 @@ export default function ParticleHeadline({
 
       cssW = Math.ceil(textBox.width + pad * 2);
       cssH = Math.ceil(textBox.height + pad * 2);
-      // Gaussian falloff length. Parley's is 0.573x cap height; the push and
-      // camera distance are derived from it inside the shader.
-      radius = Math.max(45, Math.min(140, fontSize * 0.573));
+      // Gaussian falloff length. Parley's is 0.573x cap height; the push,
+      // camera distance and depth spread are all derived from it inside the
+      // shader, so scaling this one number scales the whole sphere. Held 7%
+      // under parley's figure by request: 0.573 * 0.93.
+      radius = Math.max(42, Math.min(130, fontSize * 0.533));
       // ~2.8% of cap height. Parley drifts 0.028 world units against a ~168px
       // headline, i.e. ~2.5%; anything near 1% is invisible at a glance.
       driftAmp = fontSize * 0.028;
@@ -374,7 +377,10 @@ export default function ParticleHeadline({
           /* Safari — ignore */
         }
       }
-      const lines = wrapLines(rctx, text, textBox.width + 1);
+      // With `white-space: nowrap` the browser lays the headline out on one
+      // line, so the raster must not re-wrap it behind the browser's back.
+      const noWrap = cs.whiteSpace === 'nowrap' || cs.whiteSpace.startsWith('pre');
+      const lines = noWrap ? [text] : wrapLines(rctx, text, textBox.width + 1);
       rctx.fillStyle = '#fff';
       rctx.textBaseline = 'middle';
       rctx.textAlign = 'left';
@@ -498,6 +504,8 @@ export default function ParticleHeadline({
       raf = requestAnimationFrame(frame);
       if (!ready || !onScreen) return;
 
+      refreshRect();
+
       const now = performance.now();
       const elapsed = (now - start) / 1000;
       const reveal = reduceMotion ? 1 : Math.min(1, elapsed / 1.45);
@@ -583,9 +591,6 @@ export default function ParticleHeadline({
 
       window.addEventListener('pointermove', onPointerMove, { passive: true });
       window.addEventListener('pointerleave', onPointerLeave, { passive: true });
-      window.addEventListener('scroll', refreshRect, { passive: true });
-      window.addEventListener('resize', refreshRect, { passive: true });
-
       io = new IntersectionObserver(
         ([entry]) => {
           onScreen = entry.isIntersecting;
@@ -622,8 +627,6 @@ export default function ParticleHeadline({
       io?.disconnect();
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerleave', onPointerLeave);
-      window.removeEventListener('scroll', refreshRect);
-      window.removeEventListener('resize', refreshRect);
       canvas.removeEventListener('webglcontextlost', onContextLost);
       canvas.removeEventListener('webglcontextrestored', onContextRestored);
       gl.deleteBuffer(targetBuf);
@@ -639,7 +642,7 @@ export default function ParticleHeadline({
     <h1 ref={hostRef} className={`relative ${className}`}>
       <span
         ref={textRef}
-        className="block select-none transition-opacity duration-500"
+        className="inline-block select-none transition-opacity duration-500"
       >
         {text}
       </span>

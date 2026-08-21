@@ -4,7 +4,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#DEDBC8'
+        // Rose Ember
+        primary: '#FED7AA', // peach — body text
+        ember: '#BE123C',   // crimson — accent
+        ink: '#1A0C14',     // deep plum — page ground
+        surface: '#241019',
+        surface2: '#2E1622'
       },
       fontFamily: {
         serif: ['"Instrument Serif"', 'serif']
