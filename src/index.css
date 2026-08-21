@@ -18,6 +18,15 @@ html {
   scroll-behavior: smooth;
 }
 
+/* The `*` rule above sets font-family on every element directly, which beats
+   inheritance — so the headline's measuring span (the element the particle
+   rasteriser reads its font from) has to be targeted explicitly, not just its
+   parent. Same stack parley uses for "speak plainly". */
+.font-zodiak,
+.font-zodiak span {
+  font-family: 'Zodiak', Georgia, serif;
+}
+
 body {
   margin: 0;
   overflow-x: hidden;

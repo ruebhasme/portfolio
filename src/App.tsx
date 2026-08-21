@@ -195,7 +195,7 @@ function Hero() {
           {/* Sized in vw with nowrap so "rutika bhasme" always holds one line. */}
           <ParticleHeadline
             text="rutika bhasme"
-            className="w-full whitespace-nowrap text-center text-[10.5vw] font-bold leading-[0.9] text-primary"
+            className="font-zodiak w-full whitespace-nowrap text-center text-[10.5vw] font-bold leading-[0.9] text-primary"
           />
         </div>
         <div className="absolute inset-x-0 bottom-0 z-10 px-5 pb-6 sm:px-6 sm:pb-8 md:px-8 md:pb-8 lg:px-10">
