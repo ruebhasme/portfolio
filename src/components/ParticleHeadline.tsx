@@ -68,57 +68,63 @@ void main() {
   p.x += sin(uTime * 0.60 + s * 43.0) * uDrift;
   p.y += cos(uTime * 0.50 + s * 17.0) * uDrift;
 
-  // Cursor sphere. The touched particles GATHER onto a ball and settle on its
-  // surface — they are not blown away from it. Pushing them outward (which is
-  // what parley does) just carves a flat black hole with a bright rim; there
-  // is nothing in the middle left to shade, so it reads as a 2D circle.
+  // Cursor sphere. An invisible ball rides with the pointer and the particles
+  // RESIST it — everything caught inside is driven outward along the ball's
+  // surface and off its sides, so the interior is left genuinely empty and no
+  // letterform survives inside it. They fall straight back when it moves on.
   //
-  // Collapsing an influence disc of radius ri onto a ball of radius rb packs
-  // the same particles into (ri/rb)^2 times the density, so the ball itself is
-  // brighter than the surrounding text and clearly present. Each particle
-  // slides in along its own longitude and comes to rest on the surface at
-  // height sqrt(rb^2 - nr^2). Past 0.72 the mapping eases back to the identity
-  // so it rejoins the flat text with no seam and no pile-up ring.
+  // This is parley's model, ported to pixel space. Measured off their build:
+  // the gaussian falloff L is 0.573x cap height, the peak push is 0.930L, the
+  // resting depth spread is +/-0.170L, and their camera sits 10.84L away.
+  //
+  // It matters that the repulsion is solved in 3D against that depth spread:
+  // in flat 2D every particle would slide radially around a disc, which is the
+  // 2D-circle look. With depth they fan out around the ball instead.
   float z = 0.0;
+  float F = uRadius * 0.930;          // peak push == cavity radius
   if (uMouseOn > 0.001) {
-    vec2  dm = p - uMouse;
-    float d  = length(dm);
-    // Each particle rides a slightly different ball, so the silhouette lands
-    // as a soft band instead of one hard edge.
-    float ri = uRadius * (0.86 + 0.14 * aRand.z);
-    if (d < ri) {
-      float t = d / ri;
-      // Particles sitting exactly under the cursor have no direction of
-      // their own — fan them out by seed.
-      vec2  dir = d > 0.0001
-        ? dm / d
-        : vec2(cos(s * 6.2831), sin(s * 6.2831));
-      float rb = ri * 0.72;                          // ball radius
-      float w  = smoothstep(0.72, 1.0, t);           // release toward the rim
-      float nr = mix(rb * t, d, w);
-      p = uMouse + dir * mix(d, nr, uMouseOn);
-      z = (sqrt(max(0.0, rb * rb - nr * nr)) / rb) * uMouseOn;
-    }
+    float L  = uRadius;
+    float z0 = (aRand.z - 0.5) * uRadius * 0.340;
+    vec3  P  = vec3(p, z0);
+    vec3  dm = P - vec3(uMouse, 0.0);
+    float d2 = dot(dm, dm);
+    vec3  moved = P + normalize(dm + 0.0001) * (F * exp(-d2 / (L * L)) * uMouseOn);
+    p = moved.xy;
+    // Depth GAINED, not absolute: at rest this is 0, so the resting depth
+    // spread never softens the letterforms through the perspective divide.
+    z = moved.z - z0;
   }
 
+  // Perspective about the pointer, at parley's camera distance. The depth a
+  // particle picks up riding over the ball becomes a little extra outward
+  // drift, which is what makes them read as going around it rather than
+  // sliding flat across it.
+  float camZ  = uRadius * 10.84;
+  float persp = camZ / max(1.0, camZ - z);
+  p = uMouse + (p - uMouse) * persp;
+
+  // A handful of particles sit almost exactly on the ball's axis, where dm is
+  // nearly all depth and the push barely moves them sideways. They'd be left
+  // stranded in the middle of an otherwise empty cavity, so fade them as they
+  // go over the top — they are gone from the interior, and come straight back
+  // when the pointer leaves.
+  float cleared = smoothstep(F * 0.45, F * 0.85, length(p - uMouse));
+  float inside  = mix(1.0, cleared, uMouseOn);
+
   float twinkle = 0.62 + 0.38 * sin(uTime * (0.55 + s * 1.3) + aRand.w * 6.2831);
-  // Shading across the ball: a round falloff from the near face out to the
-  // limb. It has to be written as a lift from z = 0, not a dip toward the
-  // limb — z is 0 for every untouched particle too, so anything else either
-  // dims the whole headline or needs a hard cut at the ball's edge. Kept
-  // small; gathering has already multiplied the density here, and a big
-  // boost on top just clips the core to flat white and erases the gradient.
-  vGlow = twinkle * (1.0 + 0.28 * z);
+  vGlow = twinkle * inside;
   vSeed = s;
 
   gl_Position = vec4(
     (p.x / uRes.x) * 2.0 - 1.0,
     1.0 - (p.y / uRes.y) * 2.0,
     0.0, 1.0);
-  // Size carries the depth cue: particles riding the near face of the ball
-  // are closer to the eye, so they read a little larger. Kept gentle — a
-  // strong boost just paints back the bright blob we removed.
-  gl_PointSize = (1.55 + aRand.y * 2.3) * uDpr * (1.0 + 0.45 * z) * r;
+  // Size carries the depth: particles thrown toward the eye read larger, the
+  // ones driven behind the ball smaller. That split is the 3D cue — done with
+  // size rather than brightness, so it adds no glow.
+  float depth = z / max(1.0, uRadius * 0.930);
+  gl_PointSize = (1.55 + aRand.y * 2.3) * uDpr * persp
+               * max(0.35, 1.0 + 0.5 * depth) * r;
 }`;
 
 const FRAGMENT_SRC = `#version 300 es
@@ -337,7 +343,9 @@ export default function ParticleHeadline({
 
       cssW = Math.ceil(textBox.width + pad * 2);
       cssH = Math.ceil(textBox.height + pad * 2);
-      radius = Math.max(80, Math.min(210, fontSize * 0.85));
+      // Gaussian falloff length. Parley's is 0.573x cap height; the push and
+      // camera distance are derived from it inside the shader.
+      radius = Math.max(45, Math.min(140, fontSize * 0.573));
       // ~2.8% of cap height. Parley drifts 0.028 world units against a ~168px
       // headline, i.e. ~2.5%; anything near 1% is invisible at a glance.
       driftAmp = fontSize * 0.028;
@@ -454,7 +462,7 @@ export default function ParticleHeadline({
     function onPointerMove(e: PointerEvent) {
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
-      const slack = radius * 1.4;
+      const slack = radius * 3;
       const inside =
         x > -slack && y > -slack && x < rect.width + slack && y < rect.height + slack;
       mouseTo.x = x;
