@@ -21,9 +21,12 @@ export type ParticlePalette = {
   hot: string;
 };
 
-// Rose Ember: crimson body, peach lift, warm white for the occasional spark.
+// Monochrome peach: a deep amber body, the peach itself for lift, warm white
+// for the occasional spark. The base is #FED7AA walked down in lightness at
+// the same 32 degree hue — additive blending sums overlapping particles, so
+// the body tone has to sit well below the highlight or the stroke cores clip.
 const DEFAULT_PALETTE: ParticlePalette = {
-  base: '#BE123C',
+  base: '#B27734',
   accent: '#FED7AA',
   hot: '#FFF3E6'
 };

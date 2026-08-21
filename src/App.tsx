@@ -189,12 +189,13 @@ function Hero() {
             </ul>
           </nav>
         </div>
-        <div className="absolute inset-x-0 top-0 z-10 px-5 pt-14 sm:px-6 sm:pt-16 md:px-8 md:pt-20 lg:px-10">
+        {/* Fills the hero and centres on both axes. pointer-events-none so the
+            full-bleed box can't sit over the CTA below it. */}
+        <div className="pointer-events-none absolute inset-0 z-10 flex items-center px-5 sm:px-6 md:px-8 lg:px-10">
           {/* Sized in vw with nowrap so "rutika bhasme" always holds one line. */}
           <ParticleHeadline
             text="rutika bhasme"
-            showAsterisk
-            className="whitespace-nowrap text-center text-[10.5vw] font-bold leading-[0.9] text-primary"
+            className="w-full whitespace-nowrap text-center text-[10.5vw] font-bold leading-[0.9] text-primary"
           />
         </div>
         <div className="absolute inset-x-0 bottom-0 z-10 px-5 pb-6 sm:px-6 sm:pb-8 md:px-8 md:pb-8 lg:px-10">
